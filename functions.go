@@ -69,48 +69,10 @@ func processRequest(body *webHookReqBody) {
 					log.Println(err)
 				}
 			}
-		case "/listnotes":
-			text := listNotes(db, userID)
-			err := respond(userID, text)
+		default:
+			err := respond(userID, "Hi.\nType /help to get the help text")
 			if err != nil {
 				log.Println(err)
-			}
-		default:
-			position, noteInitiated := findElement(messageRegistery, userID)
-			switch noteInitiated {
-			case true:
-				noteIsh := messageRegistery[position]
-				noteLevel := len(noteIsh.Messages)
-				switch noteLevel {
-				case 1:
-					noteIsh.Messages = append(noteIsh.Messages, strings.Join(parts, " "))
-					if err := respond(userID, "Please type the full note details."); err != nil {
-						log.Println(err)
-					}
-				case 2:
-					added := addNote(db, userID, noteIsh.Messages[1], strings.Join(parts, " "))
-					if added {
-						err := respond(userID, "Note successfully added.")
-						if err != nil {
-							log.Println(err)
-						}
-					} else {
-						err := respond(userID, "Note failed to add.")
-						if err != nil {
-							log.Println(err)
-						}
-					}
-				default:
-					err := respond(userID, "What do you mean?")
-					if err != nil {
-						log.Println(err)
-					}
-				}
-			default:
-				helpText := "Hi. Type /help to get the help text."
-				if err := respond(userID, helpText); err != nil {
-					log.Println(err)
-				}
 			}
 		}
 	// case 2:
@@ -141,47 +103,31 @@ func processRequest(body *webHookReqBody) {
 			if err != nil {
 				log.Println(err)
 			}
-		default:
-			position, noteInitiated := findElement(messageRegistery, userID)
-			switch noteInitiated {
-			case true:
-				noteIsh := messageRegistery[position]
-				noteLevel := len(noteIsh.Messages)
-				switch noteLevel {
-				case 1:
-					noteIsh.Messages = append(noteIsh.Messages, strings.Join(parts, " "))
-					if err := respond(userID, "Please type the full note details."); err != nil {
-						log.Println(err)
-					}
-				case 2:
-					added := addNote(db, userID, noteIsh.Messages[1], strings.Join(parts, " "))
-					if added {
-						err := respond(userID, "Note successfully added.")
-						if err != nil {
-							log.Println(err)
-						}
-					} else {
-						err := respond(userID, "Note failed to add.")
-						if err != nil {
-							log.Println(err)
-						}
-					}
-				default:
-					err := respond(userID, "What do you mean?")
-					if err != nil {
-						log.Println(err)
-					}
-				}
-			default:
-				helpText := "/help - Display help text.\n\n<b>Todo Commands:</b\n" +
-				"/addtask task-name - Creates a todo item with the indicated name.\n\n" +
-				"/donetask number(s) - Marks indicated Todo items as done." +
-				"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space.\n\n" +
-				"/viewtodolist - List all your items on your Todo list.\n"
+		case "/addnote":
+			title := parts[1]
+			main := strings.Join(parts[2:], " ")
+			added := addNote(db, userID, title, main)
 
-				if err := respond(userID, helpText); err != nil {
+			if added {
+				err := respond(userID, "Your Note has been created successfully.")
+				if err != nil {
 					log.Println(err)
 				}
+			} else {
+				err := respond(userID, "An Error Occurred, please try again later.")
+				if err != nil {
+					log.Println(err)
+				}
+			}
+		default:
+			helpText := "/help - Display help text.\n\n<b>Todo Commands:</b\n" +
+			"/addtask task-name - Creates a todo item with the indicated name.\n\n" +
+			"/donetask number(s) - Marks indicated Todo items as done." +
+			"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space.\n\n" +
+			"/viewtodolist - List all your items on your Todo list.\n"
+
+			if err := respond(userID, helpText); err != nil {
+				log.Println(err)
 			}
 		}
 	}
