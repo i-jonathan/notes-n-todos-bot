@@ -58,7 +58,7 @@ func listTodos(db *gorm.DB, chatID int64) string {
 func markTodo(db *gorm.DB, chatID int64, numbers []string) string {
 	var todos []todo
 
-	db.Order("done").Where("chat_id = ?", chatID).Find(&todos)
+	db.Where("chat_id = ?", chatID).Find(&todos)
 	if len(todos) == 0 {
 		return "You have no Todos."
 	}
