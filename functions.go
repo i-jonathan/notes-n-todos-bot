@@ -76,9 +76,41 @@ func processRequest(body *webHookReqBody) {
 				log.Println(err)
 			}
 		default:
-			err := respond(userID, "Hi.\nType /help to get the help text")
-			if err != nil {
-				log.Println(err)
+			position, noteInitiated := findElement(messageRegistery, userID)
+			switch noteInitiated {
+			case true:
+				noteIsh := messageRegistery[position]
+				noteLevel := len(noteIsh.Messages)
+				switch noteLevel {
+				case 1:
+					noteIsh.Messages = append(noteIsh.Messages, strings.Join(parts, " "))
+					if err := respond(userID, "Please type the full note details."); err != nil {
+						log.Println(err)
+					}
+				case 2:
+					added := addNote(db, userID, noteIsh.Messages[1], strings.Join(parts, " "))
+					if added {
+						err := respond(userID, "Note successfully added.")
+						if err != nil {
+							log.Println(err)
+						}
+					} else {
+						err := respond(userID, "Note failed to add.")
+						if err != nil {
+							log.Println(err)
+						}
+					}
+				default:
+					err := respond(userID, "What do you mean?")
+					if err != nil {
+						log.Println(err)
+					}
+				}
+			default:
+				helpText := "Hi. Type /help to get the help text."
+				if err := respond(userID, helpText); err != nil {
+					log.Println(err)
+				}
 			}
 		}
 	// case 2:
