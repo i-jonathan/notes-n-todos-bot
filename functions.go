@@ -23,10 +23,10 @@ func processRequest(body *webHookReqBody) {
 		switch command {
 		case "/help":
 			helpText := "/help - Display help text.\n" +
-				"/addtask todo-item-name - Creates a todo item with the indicated name." +
+				"/addtask task-name - Creates a todo item with the indicated name." +
 				"/donetask number(s) - Marks indicated Todo items as done." +
-				"/viewtodolist - List all your items on your Todo list.\n" +
-				"Use the number displayed from /listTodos. For multiple numbers, separate them with a space."
+				"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space." +
+				"/viewtodolist - List all your items on your Todo list.\n"
 
 			if err := respond(userID, helpText); err != nil {
 				log.Println(err)
@@ -85,11 +85,11 @@ func processRequest(body *webHookReqBody) {
 			}
 			return
 		default:
-			helpText := "/help - Display help text.\n\n\n<b>Todo List:</b>\n" +
-				"/addtask todo-item-name - Creates a todo item with the indicated name.\n" +
+			helpText := "/help - Display help text.\n" +
+				"/addtask task-name - Creates a todo item with the indicated name." +
 				"/donetask number(s) - Marks indicated Todo items as done." +
-				"/viewtodolist - List all your items on your Todo list.\n" +
-				"Use the number displayed from /listTodos. For multiple numbers, separate them with a space."
+				"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space." +
+				"/viewtodolist - List all your items on your Todo list.\n"
 
 			if err := respond(userID, helpText); err != nil {
 				log.Println(err)
