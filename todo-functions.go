@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -73,4 +74,15 @@ func markTodo(db *gorm.DB, chatID int64, numbers []string) string {
 	}
 
 	return "Marked as Done."
+}
+
+func cleanTodos(db *gorm.DB, chatID int64) bool {
+	err := db.Where("chat_id = ? AND done = ?", chatID, true).Delete(&todo{}).Error
+
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	return true
 }

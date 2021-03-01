@@ -23,21 +23,31 @@ func processRequest(body *webHookReqBody) {
 		switch command {
 		case "/help":
 			helpText := "/help - Display help text.\n" +
-				"/addtodo todo-item-name - Creates a todo item with the indicated name." +
-				"/listtodos - List all your items on your Todo list.\n" +
-				"/marktodo number(s) - Marks indicated Todo items as done." +
+				"/addtask todo-item-name - Creates a todo item with the indicated name." +
+				"/donetask number(s) - Marks indicated Todo items as done." +
+				"/viewtodolist - List all your items on your Todo list.\n" +
 				"Use the number displayed from /listTodos. For multiple numbers, separate them with a space."
 
 			if err := respond(userID, helpText); err != nil {
 				log.Println(err)
 			}
-		case "/listtodos":
+		case "/viewtodolist":
 			text := listTodos(db, userID)
 			err := respond(userID, text)
 			if err != nil {
 				log.Println(err)
 			}
-			return
+		case "/cleantodolist":
+			done := cleanTodos(db, userID)
+			if done {
+				if err := respond(userID, "Your todo list has been cleaned."); err != nil {
+					log.Println(err)
+				}
+			} else {
+				if err := respond(userID, "An error occurred. Try again later."); err != nil {
+					log.Println(err)
+				}
+			}
 		default:
 			err := respond(userID, "Hi.\nType /help to get the help text")
 			if err != nil {
@@ -49,7 +59,7 @@ func processRequest(body *webHookReqBody) {
 
 	default:
 		switch command {
-		case "/marktodo":
+		case "/donetask":
 			var numbers []string
 			numbers = append(numbers, parts[1:]...)
 			result := markTodo(db, userID, numbers)
@@ -57,7 +67,7 @@ func processRequest(body *webHookReqBody) {
 			if err := respond(userID, result); err != nil {
 				log.Println(err)
 			}
-		case "/addtodo":
+		case "/addtask":
 			text := strings.Join(parts[1:], " ")
 			isSuccess, err := createTodo(db, text, userID)
 			if isSuccess == false {
@@ -76,9 +86,9 @@ func processRequest(body *webHookReqBody) {
 			return
 		default:
 			helpText := "/help - Display help text.\n\n\n<b>Todo List:</b>\n" +
-				"/addtodo todo-item-name - Creates a todo item with the indicated name.\n" +
-				"/listtodos - List all your items on your Todo list.\n" +
-				"/marktodo number(s) - Marks indicated Todo items as done." +
+				"/addtask todo-item-name - Creates a todo item with the indicated name.\n" +
+				"/donetask number(s) - Marks indicated Todo items as done." +
+				"/viewtodolist - List all your items on your Todo list.\n" +
 				"Use the number displayed from /listTodos. For multiple numbers, separate them with a space."
 
 			if err := respond(userID, helpText); err != nil {
