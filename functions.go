@@ -25,20 +25,6 @@ func processRequest(body *webHookReqBody) {
 		}
 	}
 
-
-	if command == "/addnote" {
-		if err := respond(userID, "What is the title of your note?"); err != nil {
-			log.Println(err)
-		}
-		newStream := &messageStream{
-			ChatID: userID,
-			Messages: []string{command,},
-		}
-		messageRegistery = append(messageRegistery, newStream)
-		return
-	}
-
-
 	switch len(parts) {
 	case 1:
 		switch command {
@@ -68,6 +54,12 @@ func processRequest(body *webHookReqBody) {
 				if err := respond(userID, "An error occurred. Try again later."); err != nil {
 					log.Println(err)
 				}
+			}
+		case "/listnotes":
+			text := listNotes(db, userID)
+			err := respond(userID, text)
+			if err != nil {
+				log.Println(err)
 			}
 		default:
 			err := respond(userID, "Hi.\nType /help to get the help text")
