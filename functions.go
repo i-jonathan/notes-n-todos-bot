@@ -69,6 +69,12 @@ func processRequest(body *webHookReqBody) {
 					log.Println(err)
 				}
 			}
+		case "/listnotes":
+			text := listNotes(db, userID)
+			err := respond(userID, text)
+			if err != nil {
+				log.Println(err)
+			}
 		default:
 			err := respond(userID, "Hi.\nType /help to get the help text")
 			if err != nil {
