@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
+
 	"gorm.io/gorm"
 )
 
@@ -27,7 +29,7 @@ func listNotes(db *gorm.DB, chatID int64) string {
 	var notes []note
 	db.Order("id").Where("chat_id = ?", chatID).Find(&notes)
 
-	if len(notes) <= 1 {
+	if len(notes) == 0 {
 		return "You have no notes."
 	}
 
@@ -40,4 +42,36 @@ func listNotes(db *gorm.DB, chatID int64) string {
 	}
 
 	return message
+}
+
+func deleteNote(db *gorm.DB, chatID int64, noteIndexes []string) string {
+	var notes []note
+	db.Order("id").Where("chat_id = ?", chatID).Find(&notes)
+
+	for i := len(noteIndexes); i > 0; i-- {
+		number, _ := strconv.Atoi(noteIndexes[i])
+		if number > len(notes) || number < 1 {
+			return "Please input a valid number."
+		}
+		err := db.Where("id = ?", notes[number-1].ID).Delete(&note{}).Error
+		if err != nil {
+			log.Println(err)
+			return "An error occured. Please try again later."
+		}	
+	}	
+	return "Deleted Successfully"
+}
+
+func noteDetails(db *gorm.DB, chatID int64, noteIndex string) string {
+	var notes []note
+	db.Order("id").Where("chat_id = ?", chatID).Find(&notes)
+	index, _ := strconv.Atoi(noteIndex)
+
+	if index > len(notes) || index < 1 {
+		return "Please input a valid number."
+	}
+	note := notes[index-1]
+	text := fmt.Sprintf("<b>Title:</b> %s\n\n<b>Main Text:</b> %s", note.Title, note.FullText)
+
+	return text
 }
