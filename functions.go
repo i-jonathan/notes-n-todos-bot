@@ -22,7 +22,7 @@ func processRequest(body *webHookReqBody) {
 	case 1:
 		switch command {
 		case "/help":
-			helpText := "/help - Display help text.\n\n<b>Todo Commands:</b\n" +
+			helpText := "/help - Display help text.\n\n<b>Todo Commands:</b>\n" +
 				"/addtask task-name - Creates a todo item with the indicated name.\n\n" +
 				"/donetask number(s) - Marks indicated Todo items as done." +
 				"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space.\n\n" +
