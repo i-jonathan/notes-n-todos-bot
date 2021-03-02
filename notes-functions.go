@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 
 	"gorm.io/gorm"
@@ -47,6 +48,8 @@ func listNotes(db *gorm.DB, chatID int64) string {
 func deleteNote(db *gorm.DB, chatID int64, noteIndexes []string) string {
 	var notes []note
 	db.Order("id").Where("chat_id = ?", chatID).Find(&notes)
+
+	sort.Strings(noteIndexes)
 
 	for i := len(noteIndexes); i > 0; i-- {
 		number, _ := strconv.Atoi(noteIndexes[i-1])

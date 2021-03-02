@@ -30,7 +30,8 @@ func processRequest(body *webHookReqBody) {
 						"/donetask number(s) - Marks indicated Todo items as done." +
 						"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space.\n" +
 						"/viewtodolist - List all your items on your Todo list.\n\n" +
-						"<b>Note Commands:</b>\n/addnote title note content  - Adds a new note with title(The title should be one word and no space. Can have other characters.) and content.\n" +
+						"<b>Note Commands:</b>\n/addnote title note content  - Adds a new note with" + 
+						"title(The title should be one word and no space. Can have other characters.) and content.\n" +
 						"/deletenote number(s) - Deletes note(s) specified by numbers.\n" + 
 						"/listnotes - Lists all available notes.\n" +
 						"/readnote 1 - Reads note 1"

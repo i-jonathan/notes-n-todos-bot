@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -62,6 +63,8 @@ func markTodo(db *gorm.DB, chatID int64, numbers []string) string {
 	if len(todos) == 0 {
 		return "You have no Todos."
 	}
+
+	sort.Strings(numbers)
 
 	for i := len(numbers); i > 0; i-- {
 		number, _ := strconv.Atoi(numbers[i-1])
