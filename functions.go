@@ -25,20 +25,20 @@ func processRequest(body *webHookReqBody) {
 		}
 	}
 
+	helpText := "/help - Display help text.\n\n<b>Todo Commands:</b>\n" +
+						"/addtask <pre>task-name</pre> - Creates a todo item with the indicated name.\n" +
+						"/donetask <pre>number(s)</pre> - Marks indicated Todo items as done." +
+						"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space.\n" +
+						"/viewtodolist - List all your items on your Todo list.\n\n" +
+						"<b>Note Commands:</b>\n/addnote <pre><title></pre> <pre><note content></pre>  - Adds a new note with title and content.\n" +
+						"/deletenote <pre>number(s)</pre> - Deletes notes specified by numbers.\n" + 
+						"/listnotes - Lists all available notes.\n" +
+						"/readnote <pre>1</pre> - Reads note 1"
+
 	switch len(parts) {
 	case 1:
 		switch command {
 		case "/help":
-			helpText := "/help - Display help text.\n\n<b>Todo Commands:</b>\n" +
-						"/addtask <pre>task-name</pre> - Creates a todo item with the indicated name.\n\n" +
-						"/donetask <pre>number(s)</pre> - Marks indicated Todo items as done." +
-						"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space.\n\n" +
-						"/viewtodolist - List all your items on your Todo list.\n\n\n" +
-						"<b>Note Commands:</b>\n/addnote <pre>title</pre> <pre>note content</pre>  - Adds a new note with title and content.\n\n" +
-						"/deletenote <pre>1 5</pre> - Deletes notes 1 and 5 (an example)\n" + 
-						"/listnotes - Lists all available notes.\n" +
-						"/readnote <pre>1</pre> - Reads note 1"
-
 			if err := respond(userID, helpText); err != nil {
 				log.Println(err)
 			}
@@ -130,16 +130,6 @@ func processRequest(body *webHookReqBody) {
 				log.Println(err)
 			}
 		default:
-			helpText := "/help - Display help text.\n\n<b>Todo Commands:</b>\n" +
-						"/addtask <pre>task-name</pre> - Creates a todo item with the indicated name.\n\n" +
-						"/donetask <pre>number(s)</pre> - Marks indicated Todo items as done." +
-						"Use the number displayed from /viewtodolist. For multiple numbers, separate them with a space.\n\n" +
-						"/viewtodolist - List all your items on your Todo list.\n\n\n" +
-						"<b>Note Commands:</b>\n/addnote <pre>title</pre> <pre>note content</pre>  - Adds a new note with title and content.\n\n" +
-						"/deletenote <pre>1 5</pre> - Deletes notes 1 and 5 (an example)\n" + 
-						"/listnotes - Lists all available notes.\n" +
-						"/readnote <pre>1</pre> - Reads note 1"
-
 			if err := respond(userID, helpText); err != nil {
 				log.Println(err)
 			}

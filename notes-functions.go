@@ -49,8 +49,8 @@ func deleteNote(db *gorm.DB, chatID int64, noteIndexes []string) string {
 	db.Order("id").Where("chat_id = ?", chatID).Find(&notes)
 
 	for i := len(noteIndexes); i > 0; i-- {
-		number, _ := strconv.Atoi(noteIndexes[i])
-		if number > len(notes) || number < 1 {
+		number, _ := strconv.Atoi(noteIndexes[i-1])
+		if number > len(notes) || number < 0 {
 			return "Please input a valid number."
 		}
 		err := db.Where("id = ?", notes[number-1].ID).Delete(&note{}).Error
